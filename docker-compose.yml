@@ -10,12 +10,25 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
     networks:
-      - mssql_network
+      - app_network
+
+  mongodb:
+    image: mongodb/mongodb-community-server:7.0.5-ubuntu2204
+    container_name: mongodb_server
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=pass
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app_network
 
 volumes:
   mssql_data:
-    driver: local
+  mongo_data:
 
 networks:
-  mssql_network:
+  app_network:
     driver: bridge

@@ -1,4 +1,6 @@
 using BookStoreApp.Controllers;
+using MongoDB.Driver;
+using StackExchange.Redis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Data.SqlClient;
 
@@ -12,6 +14,14 @@ namespace BookStoreApp
 
             // Add services to the container.
             builder.Services.AddControllers();
+
+            // Add MongoDB service
+            builder.Services.AddSingleton<IMongoClient>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var mongoConnectionString = configuration.GetConnectionString("MongoDBConnection");
+                return new MongoClient(mongoConnectionString);
+            });
 
             // Configure SqlConnection for MSSQL
             builder.Services.AddTransient<SqlConnection>(sp =>
