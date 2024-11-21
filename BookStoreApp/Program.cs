@@ -1,3 +1,6 @@
+using BookStoreApp.Controllers;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Data.SqlClient;
 
 namespace BookStoreApp
 {
@@ -8,9 +11,17 @@ namespace BookStoreApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            // Configure SqlConnection for MSSQL
+            builder.Services.AddTransient<SqlConnection>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var connectionString = configuration.GetConnectionString("MSSQLConnection");
+                return new SqlConnection(connectionString);
+            });
+
+            // Add Swagger
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -24,12 +35,8 @@ namespace BookStoreApp
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
     }
