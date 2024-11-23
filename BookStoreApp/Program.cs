@@ -23,6 +23,14 @@ namespace BookStoreApp
                 return new MongoClient(mongoConnectionString);
             });
 
+            // Add Redis service
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                var redisConnectionString = configuration.GetConnectionString("RedisConnection");
+                return ConnectionMultiplexer.Connect(redisConnectionString);
+            });
+
             // Configure SqlConnection for MSSQL
             builder.Services.AddTransient<SqlConnection>(sp =>
             {

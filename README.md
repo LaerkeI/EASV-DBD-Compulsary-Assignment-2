@@ -1,5 +1,54 @@
 # EASV-DBD-Compulsary-Assignment-2
 
+## Project Setup and Delivery:
+
+### Briefly explain your design choices for using the relational database, NoSQL store, and caching.
+
+I have used a relational database for placed orders because a relational database stores data in a structured way, is well-suited for transactions, 
+and enforces ACID priciple and that's important when payments are being handled.  I chose to use MSSQL specifically because I have experience in using it. 
+
+I have used a NoSQL database (MongoDB) for displaying book details as book details may have varying attributes. MongoDB is optimized for handling large amounts of data
+and is well-suited for semi-structured and unstructured data and different data formats. MongoDB also scales well horizontally and that is useful as the book store expands their book catalog.
+I chose to use MongoDB specifically because I have experience in using it.
+
+I have used Redis Database for caching because it is an in-memory data store that is optimized for fast data retrieval.
+though the GET request to fetch books is currently only a few milliseconds faster with caching compared to without: 
+
+Without cache: 10-12 ms
+
+With cache (cached for 10 seconds): 7-9 ms
+
+
+### Provide instructions on how to set up and run the application.
+
+1. Build and run the docker compose file. 
+
+
+2. Run this command in the Developer Powershell terminal (or whatever is similar to that if not using Visual Studio): 
+``sqlcmd -S localhost,1434 -U sa -P 'MyStrong!Passw0rd'`` 
+Make sure to install mssql-tools if this command doesn't work. 
+
+
+3. Run the script in mssql-init.sql in the root directory
+
+
+
+4. Send a GET request to ``http://localhost:5000/api/book`` to display all books 
+
+
+
+5. Send a POST request to ``http://localhost:5000/api/order`` to place an order in this JSON format:
+```
+{
+    "customerId": <int>,
+    "bookISBN": <string>, 
+    "quantity": <int>
+}
+```
+
+**END OF "Project Setup and Delivery"**
+
+
 ## Just my notes because it sucks to make the same errors T-T
 
 ### Port-mapping T-T
@@ -85,4 +134,14 @@ Basic mongosh commands:
 ```
 
 
+### Redis CLI
 
+
+Monitor the Redis server’s activity to check if keys are being set and fetched:
+``docker exec -it redis redis-cli keys *``
+
+Enable monitoring in Redis to see real-time commands being executed:
+``docker exec -it redis redis-cli monitor``
+
+Get info on Redis' performance:
+``docker exec -it redis redis-cli INFO stats``
